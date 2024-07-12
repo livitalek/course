@@ -106,8 +106,7 @@ void tests() {
     show_notes();
 }
 
-int main(int argc, char* argv) 
-{
+int main(int argc, char* argv) {
     tests();
     return 0;
 }
