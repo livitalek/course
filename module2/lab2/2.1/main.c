@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "caluclator.h"
+#include "calculator.h"
 
 void info();
 
@@ -127,8 +127,8 @@ void info() {
     printf("\t-h or --help: show more information\n");
     printf("Calculation:\n");
     printf("\t./main <comand> <op1> <op2> <op3> ... <op10>\n");
-    printf("\t<op1> <op2> <op3> ... <op10> - maximum 10 operators for summation and multiplication commands\n");
-    printf("\t<op1> <op2> - maximum 2 operators for subtraction and division commands\n");
+    printf("\t<op1> <op2> <op3> ... <op10> - maximum 10 operands for summation and multiplication commands\n");
+    printf("\t<op1> <op2> - maximum 2 operands for subtraction and division commands\n");
     printf("\t<commands>:\n");
     printf("\t* \"add\" or \"+\" - summation,\n");
     printf("\t* \"sub\" or \"-\" - subtraction,\n");

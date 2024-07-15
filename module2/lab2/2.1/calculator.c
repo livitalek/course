@@ -1,4 +1,4 @@
-#include "caluclator.h"
+#include "calculator.h"
 #include <stdarg.h>
 
 int operand1, operand2;
