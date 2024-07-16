@@ -104,6 +104,8 @@ void tests() {
 
     printf("\nShow all notes\n\n");
     show_notes();
+    
+    free_all();
 }
 
 int main(int argc, char* argv) {
