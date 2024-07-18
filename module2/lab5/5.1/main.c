@@ -6,8 +6,6 @@ void test(int val, int expect) {
 }
 
 void tests() {
-    int i = name_cmp((FullName) {"Alexander", "Ivanov", "Yrievich" }, (FullName) {"Ivan", "Liwicki", "Yrievich"});
-    printf("%d\n", i);
     ContactNote contact = {{"Ivan", "Ivanov", "Ivanovich"}, {"NSTU", "Student"}, {"+88005553535", NULL, NULL}, {"ivan_ivanov@example.com", NULL}, {{"VK", "https: vk.com/ivan78", "Ivan"}}};
     ContactNote contact2 = {{NULL, "Ivanov", "Ivanovich"}, {"NSTU", "Student"}, {"+88005553535", NULL, NULL}, {"ivan_ivanov@example.com", NULL}, {{"VK", "https: vk.com/ivan78", "Ivan"}}};
     ContactNote contact3 = {{"", "Ivanov", "Ivanovich"}, {"NSTU", "Student"}, {"+88005553535", NULL, NULL}, {"ivan_ivanov@example.com", NULL}, {{"VK", "https: vk.com/ivan78", "Ivan"}}};
@@ -50,6 +48,7 @@ void tests() {
     val = add_note(contact);
     exp = 0;
     test(val, exp);
+
 
     printf("udate contact: contact4 = {{'Alexandr','Ivanovich','Ivanov'}, ...}, id = 1\n\n");
     val = update_note(1, contact4);

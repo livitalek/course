@@ -17,8 +17,8 @@ typedef struct Node {
 } Node;
 
 int push(Data data, uint8_t priority);
-int pop(Data *data, uint8_t priority, char operation[10]);
-int seek(Data *data, uint8_t priority, char operation[10]);
+int pop(Node *data, uint8_t priority, char operation[10]);
+int seek(Node *data, uint8_t priority, char operation[10]);
 
 int is_empty();
 int size();

@@ -1,20 +1,84 @@
-#include "addressbook.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+
+#define SOCIAL_SIZE 5
+
+#define LENGTH_NAME 20
+#define LENGTH_COMPANY 40
+#define LENGTH_PHONE 13
+#define LENGTH_MAX 256
+
+typedef struct Emails {
+    char home[LENGTH_MAX];
+    char work[LENGTH_MAX];
+} Emails;
+
+typedef struct Phones {
+    char phone[LENGTH_PHONE];
+    char home[LENGTH_PHONE];
+    char work[LENGTH_PHONE];
+} Phones;
+
+typedef struct Social {
+    char social_name[20];
+    char url[LENGTH_MAX];
+    char nickname[LENGTH_NAME];
+} Social;
+
+typedef struct FullName {
+    char firstname[LENGTH_NAME];
+    char lastname[LENGTH_NAME];
+    char patronomic[LENGTH_NAME];
+} FullName;
+
+typedef struct Company {
+    char company[LENGTH_COMPANY];
+    char position[LENGTH_COMPANY];
+} Company;
+
+typedef struct ContactNote {
+    FullName name;
+    Company company;
+    Phones phones;
+    Emails emails;
+    Social socials[SOCIAL_SIZE];
+} ContactNote;
+
+typedef struct Item
+{
+    ContactNote note;
+    struct Item *next;
+    struct Item *prev;
+} AddressBook;
 
 AddressBook *head = NULL;
 
-int name_cmp(FullName name1, FullName name2) {
-    int cmp = strcmp(name1.firstname, name2.firstname);    
-    if (cmp != 0) {
-        return cmp;
-    } 
-    cmp = strcmp(name1.lastname, name2.lastname);    
-    if (cmp != 0) {
-        return cmp;
-    } 
-    cmp = strcmp(name1.patronomic, name2.patronomic);
-    return cmp;
-}
+//CRUD methods
+int add_note(ContactNote contact);
+int update_note(int id, ContactNote contact);
+int delete_note(int id);
+int get_note(int id, ContactNote* note);
+
+//clear all elements
+int free_all();
+
+//find methods
+int find_first(char* firstname, char* lastname, char* patronomic, char* phone, char *email);
+int find_all(int* get_ids, char* firstname, char* lastname, char* patronomic, char* phone, char *email);
+
+//Show methods
+void show_notes();
+void show_note(int id);
+
+//Methods for creating stuctures
+FullName create_full_name(char* first_name, char* last_name, char* patronomic);
+Company create_company(char* company, char* postion);
+Phones create_phones(char* phone, char* home, char* work);
+Emails create_emails(char* home, char* work);
+Social create_social(char* social_name, char* url, char* nickname);
+ContactNote create_contact(FullName full_name, Company company, Phones phones, Emails emails, Social* socials);
+
 
 FullName create_full_name(char* first_name, char* last_name, char* patronomic) {
     FullName name;
@@ -74,46 +138,35 @@ int add_note(const ContactNote contact) {
     AddressBook *node = (AddressBook*) malloc(sizeof(AddressBook));
     node->note = contact;
     node->next = NULL;
-    node->prev = NULL;
-
-    printf("<%s %s\n", node->note.name.firstname, node->note.name.lastname);
 
     if (head == NULL) {
-        printf("1<%s %s\n", node->note.name.firstname, node->note.name.lastname);
-
         head = node;
         head->prev = NULL;
-        head->next = NULL;
-        return 0;
-    } 
-    AddressBook* current = head;
-    AddressBook* previous = NULL;
-    
-    while (current != NULL && name_cmp(current->note.name, contact.name) < 0) {
-        previous = current;
-        current = current->next;
-    }
-    
-    if (current == head) {
-        node->next = head;
-        head->prev = node;
-        head = node;
     } else {
-        node->next = current;
-        node->prev = previous;
-        previous->next = node;
-        if (current != NULL) {
-            current->prev = node;
+        AddressBook *current = head;
+        while (current->next != NULL)
+        {
+            current = current->next;
         }
+        current->next = node;
+        node->prev = current;
     }
     return 0;
 }
 
 int update_note(int id, const ContactNote contact) {
     if (contact.name.firstname == NULL || contact.name.lastname == NULL || strlen(contact.name.firstname) == 0 || strlen(contact.name.lastname) == 0) return -1;
-    delete_note(id);
-    add_note(contact);
-    return 0;
+    AddressBook* current = head;
+    int counter = 0;
+    while (current != NULL) {
+        if (id == counter) {
+            current->note = contact;
+            return 0;
+        }
+        counter++;
+        current = current->next;
+    }
+    return -1;
 }
 
 int delete_note(int id) {
@@ -139,6 +192,7 @@ int delete_note(int id) {
 }
 
 int get_note(int id, ContactNote *note) {
+    printf("*\n");
     AddressBook* current = head;
     int counter = 0;
     while (current != NULL) {
@@ -175,15 +229,17 @@ int count_note() {
     return counter;
 }
 
-int first_find(char* firstname, char* lastname, char* patronomic, char* phone, char *email) {
-        if (firstname == NULL && lastname == NULL && patronomic == NULL && phone == NULL && email == NULL) 
+int find_first(char* firstname, char* lastname, char* patronomic, char* phone, char *email) {
+    if (firstname == NULL && lastname == NULL && patronomic == NULL && phone == NULL && email == NULL) 
         return -1;
     
     int i = 0, count = count_note();
     ContactNote contact;
 
     for (i; i < count; i++) {
+        //printf("*\n");
         get_note(i, &contact);
+        //printf("*\n");
         if (
             (firstname == NULL || strcmp(contact.name.firstname, firstname) == 0) &&
             (lastname == NULL || strcmp(contact.name.lastname, lastname) == 0) &&
@@ -205,7 +261,7 @@ int first_find(char* firstname, char* lastname, char* patronomic, char* phone, c
     return -1;
 }
 
-int all_find(int* get_ids, char* firstname, char* lastname, char* patronomic, char* phone, char *email) {
+int find_all(int* get_ids, char* firstname, char* lastname, char* patronomic, char* phone, char *email) {
         if (firstname == NULL && lastname == NULL && patronomic == NULL && phone == NULL && email == NULL) 
         return -1;
 
@@ -266,17 +322,6 @@ int all_find(int* get_ids, char* firstname, char* lastname, char* patronomic, ch
     return counter;
 }
 
-void show_notes()
-{
-    int count = count_note();
-    printf("Show all contacts (%d)\n", count);
-    int id = 0;
-    for (id; id < count; id++) {
-        show_note(id);
-    }
-    printf("-----------------------------------------------------------------------------------------\n\n");
-}
-
 void show_note(int id) 
 {
     ContactNote note;
@@ -292,4 +337,15 @@ void show_note(int id)
     {
         printf("\t%s(%s): %s\n", note.socials[j].nickname, note.socials[j].social_name, note.socials[j].url);
     }
+}
+
+void show_notes()
+{
+    int count = count_note();
+    printf("Show all contacts (%d)\n", count);
+    int id = 0;
+    for (id; id < count; id++) {
+        show_note(id);
+    }
+    printf("-----------------------------------------------------------------------------------------\n\n");
 }

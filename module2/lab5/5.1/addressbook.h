@@ -64,8 +64,6 @@ int delete_note(int id);
 int get_note(int id, ContactNote* get_note);
 int free_all();
 
-int name_cmp(FullName name1, FullName name2);
-
 //find methods
 int find_first(char* firstname, char* lastname, char* patronomic, char* phone, char *email);
 int find_all(int* get_ids, char* firstname, char* lastname, char* patronomic, char* phone, char *email);

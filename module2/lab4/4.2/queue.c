@@ -56,7 +56,7 @@ int push(Data data, uint8_t priority) {
     return 0;
 }
 
-int pop(Data* data, uint8_t priority, char operation[10]) {
+int pop(Node* data, uint8_t priority, char operation[10]) {
     Node* current = head;
     Node* temp;
     if (!is_empty()) {
@@ -77,7 +77,8 @@ int pop(Data* data, uint8_t priority, char operation[10]) {
             return -1;
         }
         
-        *data = current->data;
+        data->priority = current->priority;
+        data->data = current->data;
         
         if (current->prev != NULL) {
             current->prev->next = current->next;
@@ -101,7 +102,7 @@ int pop(Data* data, uint8_t priority, char operation[10]) {
     return -1;
 }
 
-int seek(Data *data, uint8_t priority, char operation[10]) {
+int seek(Node *data, uint8_t priority, char operation[10]) {
     Node* current = head;
     if (!is_empty()) {
         while (current != NULL) {
@@ -120,7 +121,8 @@ int seek(Data *data, uint8_t priority, char operation[10]) {
         if (current == NULL) {
             return -1;
         }
-        *data = current->data;
+        data->priority = current->priority;
+        data->data = current->data;
         return 0;
     }
     return -1;

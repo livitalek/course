@@ -5,7 +5,6 @@
 #ifndef H_ADDRESSBOOK
 #define H_ADDRESSBOOK
 
-#define NOTE_SIZE 100
 #define SOCIAL_SIZE 5
 
 #define LENGTH_NAME 20
@@ -48,23 +47,24 @@ typedef struct ContactNote {
     Emails emails;
     Social socials[SOCIAL_SIZE];
 } ContactNote;
-
+ 
 typedef struct Item
 {
     ContactNote note;
     struct Item *next;
     struct Item *prev;
-} AddressBook;
+} AddressBook; 
 
-
+/*
+Methods in libaddressbook.so
 //CRUD methods
 int add_note(ContactNote contact);
 int update_note(int id, ContactNote contact);
 int delete_note(int id);
 int get_note(int id, ContactNote* get_note);
-int free_all();
 
-int name_cmp(FullName name1, FullName name2);
+//clear all elements
+int free_all();
 
 //find methods
 int find_first(char* firstname, char* lastname, char* patronomic, char* phone, char *email);
@@ -81,5 +81,26 @@ Phones create_phones(char* phone, char* home, char* work);
 Emails create_emails(char* home, char* work);
 Social create_social(char* social_name, char* url, char* nickname);
 ContactNote create_contact(FullName full_name, Company company, Phones phones, Emails emails, Social* socials);
+*/
+
+FullName (*_create_full_name)(char*, char*, char*);
+Company (*_create_company)(char*, char*);
+Phones (*_create_phones)(char*, char*, char*);
+Emails (*_create_emails)(char*, char*);
+Social (*_create_social)(char*, char*, char*);
+ContactNote (*_create_contact)(FullName, Company, Phones, Emails, Social*);
+
+int (*_find_first)(char* , char* , char* , char* , char *);
+int (*_find_all)(int* , char* , char* , char* , char* , char*);
+
+void (*_show_notes)();
+void (*_show_note)(int);
+
+
+int (*_add_note)(ContactNote);
+int (*_update_note)(int, ContactNote);
+int (*_delete_note)(int);
+int (*_get_note)(int, ContactNote*);
+int (*_free_all)();
 
 #endif

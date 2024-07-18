@@ -3,19 +3,6 @@
 
 AddressBook *head = NULL;
 
-int name_cmp(FullName name1, FullName name2) {
-    int cmp = strcmp(name1.firstname, name2.firstname);    
-    if (cmp != 0) {
-        return cmp;
-    } 
-    cmp = strcmp(name1.lastname, name2.lastname);    
-    if (cmp != 0) {
-        return cmp;
-    } 
-    cmp = strcmp(name1.patronomic, name2.patronomic);
-    return cmp;
-}
-
 FullName create_full_name(char* first_name, char* last_name, char* patronomic) {
     FullName name;
     strcpy(name.firstname, first_name);
@@ -74,46 +61,35 @@ int add_note(const ContactNote contact) {
     AddressBook *node = (AddressBook*) malloc(sizeof(AddressBook));
     node->note = contact;
     node->next = NULL;
-    node->prev = NULL;
-
-    printf("<%s %s\n", node->note.name.firstname, node->note.name.lastname);
 
     if (head == NULL) {
-        printf("1<%s %s\n", node->note.name.firstname, node->note.name.lastname);
-
         head = node;
         head->prev = NULL;
-        head->next = NULL;
-        return 0;
-    } 
-    AddressBook* current = head;
-    AddressBook* previous = NULL;
-    
-    while (current != NULL && name_cmp(current->note.name, contact.name) < 0) {
-        previous = current;
-        current = current->next;
-    }
-    
-    if (current == head) {
-        node->next = head;
-        head->prev = node;
-        head = node;
     } else {
-        node->next = current;
-        node->prev = previous;
-        previous->next = node;
-        if (current != NULL) {
-            current->prev = node;
+        AddressBook *current = head;
+        while (current->next != NULL)
+        {
+            current = current->next;
         }
+        current->next = node;
+        node->prev = current;
     }
     return 0;
 }
 
 int update_note(int id, const ContactNote contact) {
     if (contact.name.firstname == NULL || contact.name.lastname == NULL || strlen(contact.name.firstname) == 0 || strlen(contact.name.lastname) == 0) return -1;
-    delete_note(id);
-    add_note(contact);
-    return 0;
+    AddressBook* current = head;
+    int counter = 0;
+    while (current != NULL) {
+        if (id == counter) {
+            current->note = contact;
+            return 0;
+        }
+        counter++;
+        current = current->next;
+    }
+    return -1;
 }
 
 int delete_note(int id) {
