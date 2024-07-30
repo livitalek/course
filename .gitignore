@@ -3,3 +3,9 @@ main
 *.o
 *.a
 *.so
+bin/
+rebuild.sh
+run.sh
+*.txt
+sender
+receiver
